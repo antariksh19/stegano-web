@@ -1,55 +1,71 @@
+import struct
 from PIL import Image
-import numpy as np
+import io
 
-def hide_message(image_file, encrypted_payload):
-    # 1. Open image and convert to a NumPy array
+def hide_message(image_file, payload):
+    # Force RGB to avoid bit-shifts from Alpha channels
     img = Image.open(image_file).convert('RGB')
-    pixels = np.array(img)
+    pixels = list(img.getdata())
     
-    # 2. Add a 'delimiter' so we know where the message ends during decoding
-    # We add '#####', which is 5 hash symbols as a stopping signal
-    payload = encrypted_payload + b'#####'
+    # 1. Create a 4-byte header representing the length of the payload
+    header = struct.pack('>I', len(payload))
+    data_to_hide = header + payload
     
-    # 3. Convert bytes to a flat list of bits
+    # 2. Convert bytes to a flat list of bits
     bits = []
-    for byte in payload:
+    for byte in data_to_hide:
         for i in range(8):
             bits.append((byte >> (7 - i)) & 1)
+
+    if len(bits) > len(pixels) * 3:
+        raise ValueError("IMAGE_CAPACITY_EXCEEDED")
+
+    # 3. Inject bits into the LSB of each color channel
+    new_pixels = []
+    bit_idx = 0
+    total_bits = len(bits)
     
-    # 4. Flatten the pixel data to make bit injection easier
-    flat_pixels = pixels.flatten()
-    
-    if len(bits) > len(flat_pixels):
-        raise ValueError("Image is too small to hold this message!")
-    
-    # 5. The Core LSB Move: 
-    # For each bit in our message, set the LSB of the corresponding pixel to that bit
-    for i in range(len(bits)):
-        # Clear the last bit (AND 254) then OR it with our secret bit
-        flat_pixels[i] = (flat_pixels[i] & 254) | bits[i]
-    
-    # 6. Reshape back to image dimensions and save
-    new_pixels = flat_pixels.reshape(pixels.shape)
-    return Image.fromarray(new_pixels.astype('uint8'))
+    for px in pixels:
+        channels = list(px)
+        for i in range(3): # R, G, B
+            if bit_idx < total_bits:
+                # Clear the LSB and set it to our bit
+                channels[i] = (channels[i] & ~1) | bits[bit_idx]
+                bit_idx += 1
+        new_pixels.append(tuple(channels))
+
+    out_img = Image.new("RGB", img.size)
+    out_img.putdata(new_pixels)
+    return out_img
 
 def extract_message(image_file):
     img = Image.open(image_file).convert('RGB')
-    pixels = np.array(img).flatten()
+    pixels = list(img.getdata())
     
-    # Extract LSB from every pixel
-    extracted_bits = [pixels[i] & 1 for i in range(len(pixels))]
-    
-    # Convert bits back to bytes
-    all_bytes = bytearray()
-    for i in range(0, len(extracted_bits), 8):
-        byte = 0
-        for bit in range(8):
-            if i + bit < len(extracted_bits):
-                byte = (byte << 1) | extracted_bits[i + bit]
-        all_bytes.append(byte)
-        
-        # Check if we hit our delimiter '#####'
-        if all_bytes.endswith(b'#####'):
-            return all_bytes[:-5] # Return message without the delimiter
+    # 1. Extract ALL LSBs into a flat list
+    all_lsbs = []
+    for px in pixels:
+        for i in range(3):
+            all_lsbs.append(px[i] & 1)
             
-    return all_bytes
+    # 2. Parse the first 32 bits to get the payload length
+    header_bits = all_lsbs[:32]
+    header_bytes = []
+    for i in range(0, 32, 8):
+        byte = 0
+        for bit in header_bits[i:i+8]:
+            byte = (byte << 1) | bit
+        header_bytes.append(byte)
+    
+    payload_length = struct.unpack('>I', bytes(header_bytes))[0]
+    
+    # 3. Extract exactly the required number of payload bits
+    payload_bits = all_lsbs[32 : 32 + (payload_length * 8)]
+    payload_bytes = []
+    for i in range(0, len(payload_bits), 8):
+        byte = 0
+        for bit in payload_bits[i:i+8]:
+            byte = (byte << 1) | bit
+        payload_bytes.append(byte)
+        
+    return bytes(payload_bytes)
