@@ -3,26 +3,19 @@ SteganoWeb is a full-stack security application that combines AES-256-GCM Encryp
 
 🚀 Key Features
 Dual-Layer Security: Messages are first encrypted using AES-256-GCM before being embedded.
-
 High Fidelity: Uses LSB substitution to ensure the stego-image is visually indistinguishable from the original.
-
 Tamper Detection: AES-GCM provides an authentication tag to ensure the hidden data hasn't been modified.
-
 Zero-Knowledge: The server processes images in memory (RAM); no secret data or images are stored in a database.
 
 🛠️ Tech Stack
 Frontend
 React.js: Component-based UI for a seamless Single Page Application experience.
-
 Axios: For asynchronous multi-part file uploads.
-
 CSS/Tailwind: Modern, responsive security-themed interface.
 
 Backend
 Flask (Python): RESTful API for handling cryptographic and image processing logic.
-
 PyCryptodome: Industry-standard library for AES-GCM implementation.
-
 Pillow & NumPy: High-performance pixel manipulation and image handling.
 
 💡 Why LSB + AES-GCM?

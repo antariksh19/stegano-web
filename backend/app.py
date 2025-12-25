@@ -30,16 +30,19 @@ def encode():
 
 @app.route('/api/decode', methods=['POST'])
 def decode():
-    file = request.files['image']
-    password = request.form['password']
+    try:
+        file = request.files['image']
+        password = request.form['password']
 
-    # 1. Extract the raw bytes from the pixels
-    encrypted_payload = extract_message(file)
+        # 1. Extract bytes from pixels
+        encrypted_payload = extract_message(file)
 
-    # 2. Decrypt the payload back into text
-    secret_text = decrypt_data(encrypted_payload, password)
+        # 2. Decrypt using the password
+        secret_text = decrypt_data(encrypted_payload, password)
 
-    return jsonify({'message': secret_text})
+        return jsonify({'message': secret_text})
+    except Exception as e:
+        return jsonify({'message': f"DECRYPTION_ERROR: {str(e)}"}), 400
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
