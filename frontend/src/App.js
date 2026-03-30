@@ -89,7 +89,9 @@ function App() {
     formData.append('password', encodePassword);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/encode', formData, { 
+      // UPDATED: Now uses environment variable for the API URL
+      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const response = await axios.post(`${API_URL}/api/encode`, formData, { 
         responseType: 'blob' 
       });
       
@@ -132,7 +134,9 @@ function App() {
     formData.append('password', decodePassword);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/decode', formData);
+      // UPDATED: Now uses environment variable for the API URL
+      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const response = await axios.post(`${API_URL}/api/decode`, formData);
       setDecodedMessage(response.data.message);
       addLog("SUCCESS: DATA_RECOVERED_FROM_CARRIER", "SUCCESS");
 
@@ -142,8 +146,6 @@ function App() {
       if (fileInput) fileInput.value = "";
 
     } catch (error) {
-      // FIX: This now correctly catches the 401 error from your updated Flask backend
-      // and logs it as a Red "ERROR" type.
       const errorMsg = error.response?.data?.message || "AUTH_FAILURE: INVALID_KEY_OR_TAMPERED_PIXELS";
       addLog(errorMsg.toUpperCase(), "ERROR");
       
