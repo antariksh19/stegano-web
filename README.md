@@ -33,22 +33,22 @@ Stegano-web is a specialized security tool that combines modern frontend archite
 
 ```text
 stegano-web/
-├── backend/                  # Python API and Core Logic[cite: 9]
-│   ├── app.py                # Main server entry point[cite: 9]
+├── backend/                  # Python API and Core Logic
+│   ├── app.py                # Main server entry point
 │   ├── logic/
-│   │   ├── encryption.py     # AES-256-GCM encryption handlers[cite: 9]
-│   │   └── steganography.py  # LSB image processing algorithms[cite: 9]
-│   ├── test_crypto.py        # Cryptographic unit tests[cite: 9]
-│   └── requirements.txt      # Python dependencies[cite: 9]
+│   │   ├── encryption.py     # AES-256-GCM encryption handlers
+│   │   └── steganography.py  # LSB image processing algorithms
+│   ├── test_crypto.py        # Cryptographic unit tests
+│   └── requirements.txt      # Python dependencies
 │
-└── frontend/                 # React UI[cite: 9]
-    ├── public/               # Static assets[cite: 9]
+└── frontend/                 # React UI
+    ├── public/               # Static assets
     ├── src/
-    │   ├── services/         # API integration layer[cite: 9]
-    │   ├── App.js            # Root React component[cite: 9]
-    │   ├── MatrixRain.js     # Custom UI effect component[cite: 9]
-    │   └── index.css         # Global styling[cite: 9]
-    └── tailwind.config.js    # Tailwind configuration[cite: 9]
+    │   ├── services/         # API integration layer
+    │   ├── App.js            # Root React component
+    │   ├── MatrixRain.js     # Custom UI effect component
+    │   └── index.css         # Global styling
+    └── tailwind.config.js    # Tailwind configuration
 ```
 
 ## 🛠 System Setup
@@ -67,14 +67,14 @@ Open a terminal and navigate to the backend directory:
 cd backend
 ```
 
-Create a virtual environment and install the dependencies[cite: 9]:
+Create a virtual environment and install the dependencies:
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 pip install -r requirements.txt
 ```
 
-Run the backend server[cite: 9]:
+Run the backend server:
 ```bash
 python app.py
 ```
@@ -86,7 +86,7 @@ Open a second terminal and navigate to the frontend directory:
 cd frontend
 ```
 
-Install the Node dependencies[cite: 9]:
+Install the Node dependencies:
 ```bash
 npm install
 ```
@@ -99,7 +99,7 @@ The frontend will typically run on `http://localhost:3000` and communicate with 
 
 ## 🧪 Testing
 
-The repository includes a test suite to verify the integrity of the cryptographic algorithms. To run the tests, navigate to the backend directory and execute[cite: 9]:
+The repository includes a test suite to verify the integrity of the cryptographic algorithms. To run the tests, navigate to the backend directory and execute:
 ```bash
 pytest test_crypto.py
 ```
