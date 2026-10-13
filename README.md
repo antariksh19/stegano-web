@@ -24,10 +24,10 @@
 Stegano-web is a specialized security tool that combines modern frontend architecture with robust backend cryptographic algorithms. It allows users to imperceptibly embed highly sensitive, encrypted data directly into standard image files, ensuring data confidentiality through both encryption and obfuscation.
 
 ### ✨ Key Features
-* **LSB Steganography:** Implements Least Significant Bit manipulation to embed data into image pixels without visually altering the image[cite: 9].
-* **Military-Grade Encryption:** Utilizes AES-256-GCM to encrypt the message payload before it is hidden, ensuring that even if the steganography is detected, the payload remains secure[cite: 9].
-* **Immersive UI:** Features a custom-built, responsive React frontend tailored with Tailwind CSS, including a dynamic `MatrixRain` background component[cite: 9].
-* **Decoupled Architecture:** Clean separation of concerns between the React client and the Python API processing layer[cite: 9].
+* **LSB Steganography:** Implements Least Significant Bit manipulation to embed data into image pixels without visually altering the image.
+* **Military-Grade Encryption:** Utilizes AES-256-GCM to encrypt the message payload before it is hidden, ensuring that even if the steganography is detected, the payload remains secure.
+* **Immersive UI:** Features a custom-built, responsive React frontend tailored with Tailwind CSS, including a dynamic `MatrixRain` background component.
+* **Decoupled Architecture:** Clean separation of concerns between the React client and the Python API processing layer.
 
 ## 📂 Project Structure
 
