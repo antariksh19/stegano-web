@@ -1,6 +1,5 @@
 <div align="center">
-  <!-- Replace with an actual GIF of the Matrix Rain UI and encryption process -->
-  <img src="./frontend/public/og-image.png" alt="Stegano-web Banner" width="100%">
+  
 
   <h1>Stegano-web 🔒</h1>
 
